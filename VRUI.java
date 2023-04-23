@@ -152,11 +152,7 @@ public class VRUI {
 		if ( foundVideo == null ) return ;
 		
 		Rental rental = new Rental(foundVideo) ;
-		foundVideo.setRented(true);
-		
-		List<Rental> customerRentals = foundCustomer.getRentals() ;
-		customerRentals.add(rental);
-		foundCustomer.setRentals(customerRentals);		
+		foundCustomer.addRental(rental);
 	}
 
 	public void registerCustomer() {
