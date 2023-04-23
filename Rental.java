@@ -2,13 +2,12 @@ import java.util.Date;
 
 public class Rental {
 	private Video video ;
-	private int status ; // 0 for Rented, 1 for Returned
+//	private int status ; // 0 for Rented, 1 for Returned
 	private Date rentDate ;
 	private Date returnDate ;
 
 	public Rental(Video video) {
-		this.video = video ;
-		status = 0 ;
+		this.setVideo(video);
 		rentDate = new Date() ;
 	}
 	
@@ -20,16 +19,14 @@ public class Rental {
 		this.video = video;
 	}
 
-	public int getStatus() {
-		return status;
-	}
-
 	public void returnVideo() {
-		if ( status == 1 ) {
-			this.status = 1;
+		if ( video.isRented() ) {
+			video.setRented(true) ;
 			returnDate = new Date() ;
 		}
 	}
+
+	// TODO : Remove unused Methods
 	public Date getRentDate() {
 		return rentDate;
 	}
@@ -46,22 +43,30 @@ public class Rental {
 		this.returnDate = returnDate;
 	}
 
+	public int getDaysRented() {
+		long diff = 0 ;
+		int daysRented ;
+		if (!video.isRented()) { // returned Video
+			diff = returnDate.getTime() - rentDate.getTime();
+		} else { // not yet returned
+			diff = new Date().getTime() - rentDate.getTime();
+		}
+
+		daysRented = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
+		return daysRented ;
+	}
+
 	public int getDaysRentedLimit() {
 		int limit = 0 ;
-		int daysRented ;
-		if (getStatus() == 1) { // returned Video
-			long diff = returnDate.getTime() - rentDate.getTime();
-			daysRented = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
-		} else { // not yet returned
-			long diff = new Date().getTime() - rentDate.getTime();
-			daysRented = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
-		}
-		if ( daysRented <= 2) return limit ;
+		int daysRented = getDaysRented() ;
+
+		if ( daysRented <= 2)
+			return 0 ;
 		
 		switch ( video.getVideoType() ) {
-			case Video.VHS: limit = 5 ; break ;
-			case Video.CD: limit = 3 ; break ;
-			case Video.DVD: limit = 2 ; break ;
+			case VHS: limit = 5 ; break ;
+			case CD: limit = 3 ; break ;
+			case DVD: limit = 2 ; break ;
 		}
 		return limit ;	
 	}
