@@ -2,12 +2,13 @@ import java.util.Date;
 
 public class Rental {
 	private Video video ;
-//	private int status ; // 0 for Rented, 1 for Returned
+	private boolean isReturned ; // 0 for Rented, 1 for Returned
 	private Date rentDate ;
 	private Date returnDate ;
 
 	public Rental(Video video) {
 		this.setVideo(video);
+		this.isReturned = false;
 		rentDate = new Date();
 	}
 	
@@ -22,6 +23,7 @@ public class Rental {
 	public void returnVideo() {
 		if ( video.isRented() ) {
 			video.setRented(true) ;
+			this.isReturned = false ;
 			returnDate = new Date() ;
 		}
 	}
@@ -46,7 +48,7 @@ public class Rental {
 	public int getDaysRented() {
 		long diff = 0 ;
 		int daysRented ;
-		if (video.isRented()) { // returned Video
+		if (this.isReturned) { // returned Video
 			diff = returnDate.getTime() - rentDate.getTime();
 		} else { // not yet returned
 			diff = new Date().getTime() - rentDate.getTime();
