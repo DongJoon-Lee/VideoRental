@@ -41,11 +41,12 @@ public class Customer {
 
 		for (Rental each : rentals) {
 			result += each.getReport();
+			totalCharge += each.getCharge();
+			totalPoint += each.getPoint();
 		}
 
 		result += "Total charge: " + totalCharge + "\tTotal Point:" + totalPoint + "\n";
-		
-		
+
 		if ( totalPoint >= 10 ) {
 			System.out.println("Congrat! You earned one free coupon");
 		}
